@@ -14,6 +14,7 @@ import { Server } from "socket.io";
 import errorHandler from './config/middlewares/errorHandler.js';
 import { addLogger } from './utils/logger/logger.js';
 
+const PORT = process.env.APP_PORT || 8080;
 const app = express();
 
 // Configuración de CORS
@@ -76,10 +77,8 @@ app.use('/apidocs', swaggerUiExpress.serve, swaggerUiExpress.setup(specs));
 app.use('/', router);
 app.use(errorHandler);
 
-const port = process.env.APP_PORT || 8080;
-
-const server = app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+const server = app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
 
 export const io = new Server(server, {
