@@ -6,10 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon src/index.js --mode DEVELOPMENT",
-    "prod": "nodemon src/index.js --mode PRODUCTION",
-    "testsessions": "mocha test/sessions.test.js",
-    "testproducts": "mocha test/products.test.js",
-    "testcarts": "mocha test/carts.test.js"
+    "prod": "nodemon src/index.js --mode PRODUCTION"
   },
   "keywords": [],
   "author": "",
