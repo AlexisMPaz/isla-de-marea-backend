@@ -14,7 +14,7 @@ import { Server } from "socket.io";
 import errorHandler from './config/middlewares/errorHandler.js';
 import { addLogger } from './utils/logger/logger.js';
 
-const PORT = process.env.APP_PORT || 8080;
+const PORT = process.env.PORT || 8080;
 const app = express();
 
 // Configuración de CORS
