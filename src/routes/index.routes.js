@@ -17,7 +17,7 @@ router.use('/api/carts', routerCarts);
 router.use('/api/users', routerUsers);
 router.use('/api/session', routerSession);
 router.use('/api/chat', routerChat);
-router.use('/api', routerLoggerTest)
+router.use('/api/loggertest', routerLoggerTest)
 
 
 export default router;

@@ -1,35 +1,55 @@
 import { Schema, model } from "mongoose";
 
 const userSchema = new Schema({
-    first_name:{
+    first_name: {
         type: String,
         required: true
     },
-    last_name:{
+    last_name: {
         type: String,
         required: true
     },
-    email:{
+    email: {
         type: String,
         unique: true,
         index: true,
         required: true
     },
-    age:{
+    age: {
         type: Number,
         required: true
     },
-    role:{
+    role: {
         type: String,
         default: "usuario"
     },
-    password:{
+    password: {
         type: String,
         required: true
     },
     idCart: {
         type: Schema.Types.ObjectId,
         ref: "Carts",
+        required: true
+    },
+    documents: {
+        type: [
+            {
+                name: {
+                    type: String,
+                    required: true
+                },
+                reference: {
+                    type: String,
+                    required: true
+                }
+            }
+        ],
+        default: []
+    },
+    last_connection: {
+        type: Date,
+        default: Date.now,
         required: true
     }
 })

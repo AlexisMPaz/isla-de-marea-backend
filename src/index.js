@@ -3,6 +3,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
+import multer from 'multer';
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUiExpress from 'swagger-ui-express';
 import { __dirname } from './path.js';
@@ -36,7 +37,7 @@ const swaggerOptions = {
     openapi: '3.0.1',
     info: {
       title: 'Documentación de la aplicación Isla-de-Marea',
-      description: 'Documentacion de los endpoints de Carts y Products, varias rutas requieren una sesion activa con un role en específico definido entre paréntesis.',
+      description: 'Documentacion de los endpoints de Carts y Products.',
     },
   },
   apis: [`${__dirname}/docs/**/*.yaml`],

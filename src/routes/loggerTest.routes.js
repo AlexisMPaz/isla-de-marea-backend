@@ -2,8 +2,8 @@ import { Router } from "express";
 
 export const routerLoggerTest = Router()
 
-//("/api")
-routerLoggerTest.get('/loggertest', (req, res) => {
+//("/api/loggertest")
+routerLoggerTest.get('/', (req, res) => {
     req.logger.debug('Debug message');
     req.logger.http('HTTP message');
     req.logger.warning('Warning message');

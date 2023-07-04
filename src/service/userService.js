@@ -71,7 +71,7 @@ export const deleteUser = async (id) => {
 
 export const updateUser = async (id, info) => {
     try {
-        return await userModel.findByIdAndUpdate(id, info);
+        return await userModel.findByIdAndUpdate(id, info, { new: true });
     } catch (error) {
         CustomError.createError({
             name: "Error en la base de datos.",

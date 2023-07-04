@@ -13,8 +13,9 @@ export const loginUser = async (req, res, next) => {
 
     req.logger.http(`Petición llegó al controlador (loginUser).`);
 
-    try {
-        passport.authenticate('jwt', { session: false }, async (err, user, info) => {
+    passport.authenticate('jwt', { session: false }, async (err, user, info) => {
+        try {
+
             if (err) {
                 return res.status(401).send({
                     status: "error",
@@ -37,11 +38,12 @@ export const loginUser = async (req, res, next) => {
                         message: "Contraseña no valida",
                     })
                 }
-                const token = jwt.sign({ user: { id: userDB._id } }, process.env.JWT_SECRET);
+                const userUpdated = await updateUser(userDB._id, { last_connection: Date.now() })
+                const token = jwt.sign({ user: { id: userUpdated._id } }, process.env.JWT_SECRET);
                 res.cookie(`jwt`, token, { httpOnly: true })
                 res.status(200).json({
                     status: "success",
-                    user: userDB,
+                    user: userUpdated,
                     message: "Estas logeado"
                 })
 
@@ -62,12 +64,12 @@ export const loginUser = async (req, res, next) => {
                     })
                 })
             }
-        })(req, res, next)
 
-    } catch (error) {
-        req.logger.error(error.message)
-        next(error)
-    }
+        } catch (error) {
+            req.logger.error(error.message)
+            next(error)
+        }
+    })(req, res, next)
 }
 
 export const registerUser = async (req, res, next) => {
@@ -132,13 +134,15 @@ export const logoutUser = async (req, res, next) => {
             });
         }
 
-        jwt.verify(token, process.env.JWT_SECRET, (err, decodedToken) => {
+        jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
             if (err) {
-                return res.status(401).send({status: "error", message: 'Token no válida' });
+                return res.status(401).send({ status: "error", message: 'Token no válida' });
             }
 
+            const userUpdated = await updateUser(decodedToken.user.id, { last_connection: Date.now() })
+
             res.clearCookie('jwt');
-            res.status(200).send({status: "success", message: 'Sesión cerrada exitosamente' });
+            res.status(200).send({ status: "success", message: 'Sesión cerrada exitosamente' });
         });
     } catch (error) {
         req.logger.error(error.message)
@@ -240,20 +244,20 @@ export const resetUserPassword = async (req, res, next) => {
         const userId = decodedToken.userId;
         const userDB = await findUserById(userId);
         if (!userDB) {
-            return res.status(404).json({ 
+            return res.status(404).json({
                 status: "error",
                 message: 'Usuario no encontrado.'
             });
         }
         if (comparePassword(newPassword, userDB.password)) {
-            return res.status(404).json({ 
+            return res.status(404).json({
                 status: "error",
                 message: 'La nueva contraseña no puede ser la misma que la anterior'
             });
         }
         const hashPassword = createHash(newPassword);
-        await updateUser(userId, {password: hashPassword})
-        
+        await updateUser(userId, { password: hashPassword })
+
         return res.status(200).json({
             status: "success",
             message: "La contraseña ha sido actualizada"
