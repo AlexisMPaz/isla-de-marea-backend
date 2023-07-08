@@ -1,4 +1,4 @@
-import { findUsers, findUserById} from "../service/userService.js";
+import { findUsers, findUserById } from "../service/userService.js";
 import path from 'path';
 
 export const getUsers = async (req, res, next) => {
@@ -78,3 +78,41 @@ export const updateUserDocuments = async (req, res, next) => {
         next(error);
     }
 };
+
+export const updateUserRole = async (req, res, next) => {
+    req.logger.http(`Petición llegó al controlador (updateUserRole).`);
+    const user = req.user;
+
+    try {
+        if (user.role === "usuario") {
+            const premiumDocumentsCount = user.documents.reduce((count, doc) => {
+                return count + (doc.name.startsWith('profile') ? 0 : 1);
+            }, 0);
+
+            if (premiumDocumentsCount < 3) {
+                return res.status(400).json({
+                    status: 'error',
+                    message: 'El usuario no cumple con los requisitos para el rol premium'
+                });
+            }
+
+            user.role = 'premium';
+            await user.save();
+            return res.status(200).json({
+                status: "error",
+                message: 'Rol de usuario actualizado a premium'
+            });
+        }
+
+        user.role = 'usuario';
+        await user.save();
+        return res.status(200).json({
+            status: "error",
+            message: 'Rol premium actualizado a usuario'
+        });
+
+    } catch (error) {
+        req.logger.error(error.message);
+        next(error);
+    }
+}
