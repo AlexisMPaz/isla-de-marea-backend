@@ -7,7 +7,8 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js --mode DEVELOPMENT",
-    "prod": "nodemon src/index.js --mode PRODUCTION"
+    "prod": "nodemon src/index.js --mode PRODUCTION",
+    "test": "mocha test/purchase.test.js"
   },
   "keywords": [],
   "author": "",

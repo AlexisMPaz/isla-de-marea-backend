@@ -1,4 +1,4 @@
-import { findUsers, findUserById } from "../service/userService.js";
+import { findUsers, findUserById, deleteUserById, findAndDeleteOldUsers } from "../service/userService.js";
 import path from 'path';
 
 export const getUsers = async (req, res, next) => {
@@ -7,7 +7,47 @@ export const getUsers = async (req, res, next) => {
 
     try {
         const users = await findUsers()
-        res.status(200).json({ users })
+        res.status(200).json({
+            status: "success",
+            payload: users
+        })
+
+    } catch (error) {
+        req.logger.error(error.message)
+        next(error)
+    }
+}
+
+export const deleteUser = async (req, res, next) => {
+
+    req.logger.http(`Petición llegó al controlador (deleteUser).`);
+    const userId = req.params.uid
+
+    try {
+        const user = await deleteUserById(userId);
+        res.status(200).json({
+            status: "success",
+            message: `El usuario Id: ${userId} ha sido eliminado`
+        })
+
+    } catch (error) {
+        req.logger.error(error.message)
+        next(error)
+    }
+}
+
+export const deleteOldUsers = async (req, res, next) => {
+
+    req.logger.http(`Petición llegó al controlador (deleteOldUsers).`);
+
+    try {
+
+        const deletedUserCount = await findAndDeleteOldUsers()
+        res.status(200).json({
+            status: "success",
+            message: `Se han eliminado ${deletedUserCount} usuario/s`
+        })
+
 
     } catch (error) {
         req.logger.error(error.message)

@@ -43,8 +43,8 @@ export const loginUser = async (req, res, next) => {
                 res.cookie(`jwt`, token, { httpOnly: true })
                 res.status(200).json({
                     status: "success",
-                    user: userUpdated,
-                    message: "Estas logeado"
+                    message: "Estas logeado",
+                    payload: userUpdated
                 })
 
             } else {
@@ -175,7 +175,7 @@ export const getSession = async (req, res, next) => {
                 if (err) {
                     return res.status(401).send({
                         status: "error",
-                        message: "Credenciales no validas",
+                        message: "Credenciales no válidas",
                     })
                 }
 
