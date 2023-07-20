@@ -70,7 +70,10 @@ export const addProductToCart = async (req, res, next) => {
             })
         }
 
-        req.logger.warning(`El producto con id: ${idProduct} no existe en la base de datos.`)
+        return res.status(400).send({
+            status: "error",
+            message: `El producto con id: ${idProduct} no existe en la base de datos.`,
+        })
 
     } catch (error) {
         req.logger.error(error.message)
@@ -212,6 +215,14 @@ export const createTicket = async (req, res, next) => {
             return res.status(400).send({
                 status: "error",
                 message: "Algunos productos no tienen suficiente stock, han sido removidos del carrito",
+                payload: updatedCart
+            });
+        }
+
+        if (amount < 1 || updatedCart.products.length === 0) {
+            return res.status(400).send({
+                status: "error",
+                message: "No hay productos en el carrito",
                 payload: updatedCart
             });
         }

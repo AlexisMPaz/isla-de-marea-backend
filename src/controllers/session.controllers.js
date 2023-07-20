@@ -17,7 +17,7 @@ export const loginUser = async (req, res, next) => {
         try {
 
             if (err) {
-                return res.status(401).send({
+                return res.status(401).json({
                     status: "error",
                     message: "Error en consulta de token",
                 })
@@ -27,20 +27,20 @@ export const loginUser = async (req, res, next) => {
                 const { email, password } = req.body;
                 const userDB = await findUserByEmail(email)
                 if (!userDB) {
-                    return res.status(401).send({
+                    return res.status(401).json({
                         status: "error",
                         message: "Usuario no encontrado",
                     })
                 }
                 if (!comparePassword(password, userDB.password)) {
-                    return res.status(401).send({
+                    return res.status(401).json({
                         status: "error",
                         message: "Contraseña no valida",
                     })
                 }
                 const userUpdated = await updateUser(userDB._id, { last_connection: Date.now() })
-                const token = jwt.sign({ user: { id: userUpdated._id } }, process.env.JWT_SECRET);
-                res.cookie(`jwt`, token, { httpOnly: true })
+                const token = jwt.sign({ user: { id: userUpdated._id } }, process.env.JWT_SECRET, { expiresIn: '3h' });
+                res.cookie(`jwt`, token, { httpOnly: true, maxAge: 3 * 60 * 60 * 1000 })
                 res.status(200).json({
                     status: "success",
                     message: "Estas logeado",
@@ -52,13 +52,13 @@ export const loginUser = async (req, res, next) => {
                 const token = req.cookies.jwt;
                 jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
                     if (err) {
-                        return res.status(401).send({
+                        return res.status(401).json({
                             status: "error",
                             message: "Credenciales no validas",
                         })
                     }
 
-                    return res.status(401).send({
+                    return res.status(401).json({
                         status: "error",
                         message: "Primero debes cerrar la sesión",
                     })
@@ -90,7 +90,7 @@ export const registerUser = async (req, res, next) => {
 
         const userDB = await findUserByEmail(email)
         if (userDB) {
-            res.status(401).send({
+            res.status(401).json({
                 status: "error",
                 message: "Usuario ya registrado"
             })
@@ -106,11 +106,11 @@ export const registerUser = async (req, res, next) => {
                 password: hashPassword,
                 idCart: newCart._id
             })
-            const token = jwt.sign({ user: { id: newUser._id } }, process.env.JWT_SECRET);
-            res.cookie('jwt', token, { httpOnly: true });
+            const token = jwt.sign({ user: { id: newUser._id } }, process.env.JWT_SECRET, { expiresIn: '3h' });
+            res.cookie('jwt', token, { httpOnly: true, maxAge: 3 * 60 * 60 * 1000 });
             res.status(200).json({
                 status: "success",
-                user: newUser,
+                payload: newUser,
                 message: "Te has logeado satisfactoriamente"
             })
         }
@@ -128,7 +128,7 @@ export const logoutUser = async (req, res, next) => {
     try {
         const token = req.cookies.jwt;
         if (!token) {
-            return res.status(401).send({
+            return res.status(401).json({
                 status: "error",
                 message: 'No se proporcionó ninguna token de autenticación'
             });
@@ -136,13 +136,19 @@ export const logoutUser = async (req, res, next) => {
 
         jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
             if (err) {
-                return res.status(401).send({ status: "error", message: 'Token no válida' });
+                return res.status(401).json({
+                    status: "error",
+                    message: 'Token no válida'
+                });
             }
 
             const userUpdated = await updateUser(decodedToken.user.id, { last_connection: Date.now() })
 
             res.clearCookie('jwt');
-            res.status(200).send({ status: "success", message: 'Sesión cerrada exitosamente' });
+            res.status(200).json({
+                status: "success",
+                message: 'Sesión cerrada exitosamente' 
+            });
         });
     } catch (error) {
         req.logger.error(error.message)
@@ -157,14 +163,14 @@ export const getSession = async (req, res, next) => {
     try {
         passport.authenticate('jwt', { session: false }, async (err, user, info) => {
             if (err) {
-                return res.status(401).send({
+                return res.status(401).json({
                     status: "error",
                     message: "Error en consulta de token",
                 })
             }
 
             if (!user) {
-                return res.status(401).send({
+                return res.status(401).json({
                     status: "error",
                     message: "No se ha encontrado al usuario",
                 })
@@ -173,13 +179,13 @@ export const getSession = async (req, res, next) => {
             const token = req.cookies.jwt;
             jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
                 if (err) {
-                    return res.status(401).send({
+                    return res.status(401).json({
                         status: "error",
                         message: "Credenciales no válidas",
                     })
                 }
 
-                return res.status(200).send({
+                return res.status(200).json({
                     status: "success",
                     message: "Se ha encontrado los datos del usuario",
                     payload: user,

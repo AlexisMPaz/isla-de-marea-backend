@@ -19,7 +19,7 @@ const PORT = process.env.PORT || 8080;
 const app = express();
 
 // Configuración de CORS
-const whiteList = ["http://localhost:3000", "http://localhost:8080"];
+const whiteList = ["http://localhost:3000", "http://localhost:8080", "https://backend-isla-de-marea.onrender.com"];
 const corsOptions = {
   origin: function (origin, callback) {
     if (whiteList.indexOf(origin) !== -1 || !origin) {
