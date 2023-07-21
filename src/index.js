@@ -19,10 +19,10 @@ const PORT = process.env.PORT || 8080;
 const app = express();
 
 // Configuración de CORS
-const whiteList = ["http://localhost:3000", "http://localhost:8080", "https://app-isla-de-marea.onrender.com"];
+const whiteList = ["http://localhost:3000", "http://localhost:8080", "https://app-isla-de-marea.onrender.com", "https://api-isla-de-marea.onrender.com"];
 const corsOptions = {
   origin: function (origin, callback) {
-    if (whiteList.indexOf(origin) == -1 || !origin) {
+    if (whiteList.indexOf(origin) !== -1 || !origin) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
@@ -59,12 +59,6 @@ app.use(addLogger);
 initializePassport();
 app.use(passport.initialize());
 app.use(passport.session());
-
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'https://app-isla-de-marea.onrender.com');
-  res.header('Access-Control-Allow-Credentials', true);
-  next();
-});
 
 const connectionMongoose = async () => {
   try {
