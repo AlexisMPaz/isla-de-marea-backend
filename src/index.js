@@ -60,6 +60,12 @@ initializePassport();
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'https://app-isla-de-marea.onrender.com');
+  res.header('Access-Control-Allow-Credentials', true);
+  next();
+});
+
 const connectionMongoose = async () => {
   try {
     await mongoose.connect(process.env.URLMONGODB, {
