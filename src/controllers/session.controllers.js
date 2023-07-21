@@ -107,7 +107,7 @@ export const registerUser = async (req, res, next) => {
                 idCart: newCart._id
             })
             const token = jwt.sign({ user: { id: newUser._id } }, process.env.JWT_SECRET, { expiresIn: '3h' });
-            res.cookie('jwt', token, { httpOnly: false, maxAge: 3 * 60 * 60 * 1000 });
+            res.cookie('jwt', token, { httpOnly: true, maxAge: 3 * 60 * 60 * 1000 });
             res.status(200).json({
                 status: "success",
                 payload: newUser,
@@ -161,7 +161,7 @@ export const getSession = async (req, res, next) => {
     req.logger.http(`Petición llegó al controlador (getSession).`);
 
     try {
-        passport.authenticate('jwt', { session: false }, async (err, user, info) => {
+        passport.authenticate('jwt', { session: true }, async (err, user, info) => {
             if (err) {
                 return res.status(401).json({
                     status: "error",
