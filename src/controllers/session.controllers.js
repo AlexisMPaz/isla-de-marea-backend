@@ -40,7 +40,7 @@ export const loginUser = async (req, res, next) => {
                 }
                 const userUpdated = await updateUser(userDB._id, { last_connection: Date.now() })
                 const token = jwt.sign({ user: { id: userUpdated._id } }, process.env.JWT_SECRET, { expiresIn: '3h' });
-                res.cookie(`jwt`, token, { httpOnly: true, maxAge: 3 * 60 * 60 * 1000 })
+                res.cookie(`jwt`, token, { httpOnly: false, maxAge: 3 * 60 * 60 * 1000 })
                 res.status(200).json({
                     status: "success",
                     message: "Estas logeado",
@@ -107,7 +107,7 @@ export const registerUser = async (req, res, next) => {
                 idCart: newCart._id
             })
             const token = jwt.sign({ user: { id: newUser._id } }, process.env.JWT_SECRET, { expiresIn: '3h' });
-            res.cookie('jwt', token, { httpOnly: true, maxAge: 3 * 60 * 60 * 1000 });
+            res.cookie('jwt', token, { httpOnly: false, maxAge: 3 * 60 * 60 * 1000 });
             res.status(200).json({
                 status: "success",
                 payload: newUser,
