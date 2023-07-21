@@ -1,0 +1,672 @@
+{
+	"info": {
+		"_postman_id": "fe2e8ace-8ee2-46f0-b0f4-de5b2320f80d",
+		"name": "Test-Backend-Alexis-Paz",
+		"description": "Test para Proyecto Final Programación Backend - Coderhouse\n\nBuenos dias/tardes/noches profesor, aca le dejo el test actualizado para ahorrarle algo de tiempo. En cada seccion pondre los cambios y que rutas he agregado. En todas las rutas he modificado el puerto a 8080.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25652294"
+	},
+	"item": [
+		{
+			"name": "Sessions",
+			"item": [
+				{
+					"name": "Current Session",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/session/current",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"session",
+								"current"
+							]
+						},
+						"description": "Devuelve los datos de la sesion actual."
+					},
+					"response": []
+				},
+				{
+					"name": "Logout Session",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/session/logout",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"session",
+								"logout"
+							]
+						},
+						"description": "Destruye la sesion borrando la Cookie jwt."
+					},
+					"response": []
+				},
+				{
+					"name": "Register Users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json()\r",
+									"pm.environment.set(\"jwt_token\", response.token)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"first_name\": \"Panchito\",\r\n    \"last_name\": \"Perez\",\r\n    \"age\": 18,\r\n    \"email\": \"perez@perez.com\",\r\n    \"password\":\"coderhouse\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/session/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"session",
+								"register"
+							]
+						},
+						"description": "Registra un nuevo usuario y recibe la token de jwt. Deje los datos del pobre Panchito porque ya son un clásico."
+					},
+					"response": []
+				},
+				{
+					"name": "Login Users",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"perez@perez.com\",\r\n    \"password\":\"coderhouse\" \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/session/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"session",
+								"login"
+							]
+						},
+						"description": "Hace Login con la cuenta de Panchito. Recibe token de jwt."
+					},
+					"response": []
+				},
+				{
+					"name": "Login Admin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"adminCoder@coder.com\",\r\n    \"password\":\"adminCod3r123\" \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/session/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"session",
+								"login"
+							]
+						},
+						"description": "Login con el admin. Recibe token de jwt."
+					},
+					"response": []
+				}
+			],
+			"description": "Para sessions agregue el Login de admin separado del Login de Users para facilitar el testeo de rutas que requieran diferentes roles."
+		},
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "Get Products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/products?limit=10&page=1&sort=asc&category=armas",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"products"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "sort",
+									"value": "asc"
+								},
+								{
+									"key": "category",
+									"value": "armas"
+								}
+							]
+						},
+						"description": "Devuelve todos los productos de la base de datos paginados. Se puede modificar los Params. El sort funciona con desc para ordenar por el precio de mayor a menor o asc/u otra cosa para ordenar de menor a mayor, si no se agrega sort no se ordenan."
+					},
+					"response": []
+				},
+				{
+					"name": "Create Product",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Mascara de Perdición\",\r\n    \"description\": \"Artefacto de Prueba\",\r\n    \"price\": 250,\r\n    \"stock\": 40,\r\n    \"code\": \"AA150AB\",\r\n    \"category\": \"armaduras\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/products",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"products"
+							]
+						},
+						"description": "Crea un nuevo producto en la base de datos. Me tome la libertad de modificar los datos para que coincidan un poco mas con mi proyecto. En una tienda de artefactos es medio raro que se venda arroz. (Requiere Admin)"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Product",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Mascarita de la Felicidad\",\r\n    \"description\": \"Artefacto de Prueba\",\r\n    \"price\": 350,\r\n    \"stock\": 35,\r\n    \"code\": \"AA150AB\",\r\n    \"category\": \"armaduras\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/products/:pid",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"products",
+								":pid"
+							],
+							"variable": [
+								{
+									"key": "pid",
+									"value": null
+								}
+							]
+						},
+						"description": "Modifica el producto antes creado cambiando el nombre. (Requiere Admin)"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Product",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/products/:pid",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"products",
+								":pid"
+							],
+							"variable": [
+								{
+									"key": "pid",
+									"value": null
+								}
+							]
+						},
+						"description": "Busca un producto por el Id y lo borra. (Requiere Admin)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Product By Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/products/:pid",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"products",
+								":pid"
+							],
+							"variable": [
+								{
+									"key": "pid",
+									"value": null
+								}
+							]
+						},
+						"description": "Ruta agregada. Devuelve un producto por el Id. En el front la uso para la pagina de detalles del producto donde tengo el boton de agregar al carrito."
+					},
+					"response": []
+				}
+			],
+			"description": "Para la mayoria de estas rutas es requerido el role de admin excepto las 2 primeras."
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Get Users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/users",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"users"
+							]
+						},
+						"description": "Trae a todos los usuarios de la base de datos pero solo los campos de nombre, apellido, mail, role e id. No tiene sentido traer una contraseña encriptada y la edad la verda que no la usamos para nada. (Requiere Admin)\n\nEndFragment"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Old Users",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/users/clean",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"users",
+								"clean"
+							]
+						},
+						"description": "Esta ruta borra a todos los usuarios que se atrevieron a no visitar mi aplicacion durante 3 dias enteros. Como se atreven..."
+					},
+					"response": []
+				}
+			],
+			"description": "No hay muchos cambios en Users."
+		},
+		{
+			"name": "Carts",
+			"item": [
+				{
+					"name": "Get Cart",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/carts",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"carts"
+							]
+						},
+						"description": "Devuelve el carrito con la informacion de los productos entera. (Requiere usuario)"
+					},
+					"response": []
+				},
+				{
+					"name": "Add Product Cart",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/carts/product/:pid",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"carts",
+								"product",
+								":pid"
+							],
+							"variable": [
+								{
+									"key": "pid",
+									"value": null
+								}
+							]
+						},
+						"description": "Agrega un producto al carrito (Solo su id y la cantidad igual a 1) Si ya esta en el carrito se sumo 1 a su cantidad. (Requiere usuario)"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Ticket",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/carts/purchase",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"carts",
+								"purchase"
+							]
+						},
+						"description": "Modifique la ruta agregando el /purchase  \n\nTermina la Compra, este es el controlador mas complejo ya que se encarga se hacer varias validaciones y modificaciones. Si todos los productos estan en orden, hay stock suficiente y obviamente hay productos en el carrito. crea un ticket y reduce el stock correspondiente de los productos en la base de datos. (Requiere usuario)"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Carts Products",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n    {\r\n        \"productId\": \"\",\r\n        \"quantity\": 2\r\n    },\r\n    {\r\n        \"productId\": \"\",\r\n        \"quantity\": 5\r\n    }\r\n]",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/carts",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"carts"
+							]
+						},
+						"description": "Pisa todo el array de productos con uno nuevo, la verdad que nunca le encontre el proposito a esta ruta pero fue pedida desde el principio cuando tuvimos que hacer la logica del cart. Supongo que es buena para testear. (Requiere usuario)"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Product Quantity",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"quantity\": 5\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/carts/product/:pid",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"carts",
+								"product",
+								":pid"
+							],
+							"variable": [
+								{
+									"key": "pid",
+									"value": null
+								}
+							]
+						},
+						"description": "Modifica la cantidad de un producto si lo encuentra dentro del carrito. (Requiere usuario)"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Cart Products",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/carts",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"carts"
+							]
+						},
+						"description": "Borra todos los productos del carrito. (Requiere usuario)"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Cart Product",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/carts/product/:pid",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"carts",
+								"product",
+								":pid"
+							],
+							"variable": [
+								{
+									"key": "pid",
+									"value": null
+								}
+							]
+						},
+						"description": "Busca un producto dentro del carrito por el id y lo elimina. (Requiere usuario)"
+					},
+					"response": []
+				}
+			],
+			"description": "Las rutas de Carts requieren ser un usuario normal. I choose you Panchito!"
+		}
+	]
+}
